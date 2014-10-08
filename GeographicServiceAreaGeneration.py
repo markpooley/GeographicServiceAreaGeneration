@@ -75,7 +75,7 @@ while FeatureCount_Unassigned > 0:
     arcpy.SetProgressorLabel("Clearing selections...")
     arcpy.SelectLayerByAttribute_management(FeatureLayer,"Clear_Selection")
 
-
+    #create an assignment dictionary that will track assignments and evaluate best assignment as nbrs can potentially be assigned to multiple sources
         
     #arcpy.AddMessage("Current iteration: " + str(loopNumber))
     adjacentSelection = arcpy.SelectLayerByLocation_management(FeatureLayer,"BOUNDARY_TOUCHES",seedPoly,"#","NEW_SELECTION")
@@ -148,21 +148,21 @@ while FeatureCount_Unassigned > 0:
             arcpy.AddMessage("Seed Zip: " + str(currentSeed) + " removed due to being bounded by other service areas")
 
         else:
-            minCompact = (max(tempDict, key = tempDict.get))    #min(tempDict.items(), key = lambda x: x[1])[0] """change to max?"""
+            maxCompact = (max(tempDict, key = tempDict.get))    
         
             #check if the best fit is in the seedlist. If it is, remove it and find imin compact again.
-            if minCompact in seedList or minCompact in removeList:
+            if maxCompact in seedList or maxCompact in removeList:
                 tempDict.pop(currentSeed,0)
                 arcpy.AddMessage(currentSeed + "removed from temp dictionary")
 
             #Recalculate the best fit 
-            minCompact = (max(tempDict, key = tempDict.get))   #min(tempDict.items(), key = lambda x: x[1])[0]   """Change to max?"""
+            maxCompact = (max(tempDict, key = tempDict.get))   
 
             
             
             if bool(tempDict) == True:
                 #if temp dictionary is not empty, assign the best neighbor to the current seed.
-                Seed_NBR_Dict[currentSeed] = minCompact
+                Seed_NBR_Dict[currentSeed] = maxCompact
 
                 arcpy.SetProgressorLabel("updating 'Assigned_To' field...")
                 #update "Assigned_To" using the dictionary
