@@ -75,8 +75,6 @@ while FeatureCount_Unassigned > 0:
     arcpy.SetProgressorLabel("Clearing selections...")
     arcpy.SelectLayerByAttribute_management(FeatureLayer,"Clear_Selection")
 
-    #create an assignment dictionary that will track assignments and evaluate best assignment as nbrs can potentially be assigned to multiple sources
-        
     #arcpy.AddMessage("Current iteration: " + str(loopNumber))
     adjacentSelection = arcpy.SelectLayerByLocation_management(FeatureLayer,"BOUNDARY_TOUCHES",seedPoly,"#","NEW_SELECTION")
 
@@ -105,7 +103,8 @@ while FeatureCount_Unassigned > 0:
             NBR_cursor.updateRow(row)
 
     #dictionary that keeps track of the seed polygon, and where it's assigned to
-    
+
+    #create an assignment dictionary that will track assignments and evaluate best assignment as nbrs can potentially be assigned to multiple sources
     Seed_NBR_Dict = {}
 
     #create a remove list that will have service areas appended to it that are surrounded by other service areas.
@@ -161,6 +160,9 @@ while FeatureCount_Unassigned > 0:
             
             
             if bool(tempDict) == True:
+                #need to check if the max compact has already shown up in the NBR dictionary, if it has check to make sure the assignment is still the best of all available options
+                #if Seed_NBR_Dict.has_key(maxCompact) == True:
+                #    if Seed_NBR_Dict[]
                 #if temp dictionary is not empty, assign the best neighbor to the current seed.
                 Seed_NBR_Dict[currentSeed] = maxCompact
 
